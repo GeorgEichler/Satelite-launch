@@ -33,7 +33,7 @@ m0 = 137*10**3 + 2169*10**3 + 141*10**3   # empty mass + fuel mass + payload (da
 m_final = 137*10**3 + 141*10**3           #final mass
 ve = 3*10**3                              # velocity of expelled gas
 dmdt = 12.5*10**3                         # speed of mass loss (kg/s)
-Cd = 0                                    # drag coefficient
+Cd = 0.5                                  # drag coefficient
 R = 10                                    # rocket radius (m)
 
 #Calculate burn time
@@ -61,4 +61,9 @@ plt.plot(sol.t, sol.y[1], label = 'Rocket velocity')
 plt.xlabel('Time t (s)')
 plt.ylabel('Velocity v (m/s)')
 plt.legend()
+
+plt.figure()
+plt.plot(sol.t, 1/(2*(m0 - dmdt*sol.t))*Cd*np.pi*R**2*1.2*10**3*np.exp(-sol.y[0]/(8.3*10**3))*sol.y[1]**2)
+plt.xlabel('Time t (s)')
+plt.ylabel('Drag force in N')
 plt.show()
