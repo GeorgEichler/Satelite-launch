@@ -29,10 +29,62 @@ def vertical_rocket_model(t, y, m0, ve, dmdt, Cd, R):
 
 # Initial conditions
 
+def plot_rocket_trajectory(mS_array, mF_array, m_payload, Isp_array, dmdt_array, Cd, R):
+    #Input variables:
+    #ms_array - structural masses of stages
+    #mF_arrray - fuel mass of stages
+    #m_payload - payload mass
+    #Isp_array - specific impulse of stages
+    #Cd   - drag coefficient
+    #R    - rocket radius
+
+    g0 = 9.81
+    s = len(mS_array) # number of stages
+    t = np.array([])
+    z = np.array([])
+    v = np.array([])
+    y0 = [0,0]
+    t0 = 0
+
+    for i in range(s):
+        #Calculate initial and final mass for the stage
+        m0 = np.sum(mS_array[i:]) + np.sum(mF_array[i:]) + m_payload
+        m_final = m0 - mF_array[i]
+        #Calculate speed of expelled gas and burning time
+        ve = g0*Isp_array[i]
+        dmdt = dmdt_array[i]
+        tb = (m0 - m_final) /dmdt
+        print(f'Burning time of stage {i} is {tb}s.')
+        t_span = [t0, t0 + tb]
+        t_eval = np.linspace(t_span[0], t_span[1], 1001)
+
+        sol = solve_ivp(vertical_rocket_model, t_span, y0, t_eval = t_eval, args = (m0, ve, dmdt, Cd, R))
+
+        t = np.concatenate((t, sol.t))
+        z = np.concatenate((z, sol.y[0]))
+        v = np.concatenate((v, sol.y[1]))
+        #Set new initial conditions
+        t0 = t[-1]
+        y0 = [z[-1], v[-1]]
+
+    plt.plot(t, z/1000, label = 'Rocket height')
+    plt.xlabel('Time t (s)')
+    plt.ylabel('Height z (km)')
+    plt.title('Altitude of rocket')
+    plt.legend()
+
+    plt.figure()
+
+    plt.plot(t, v, label = 'Rocket velocity')
+    plt.xlabel('Time t (s)')
+    plt.ylabel('Velocity v (m/s)')
+    plt.title('Rocket velocity')
+    plt.legend()
+
+
+'''
 m0 = 137*10**3 + 2169*10**3 + 141*10**3   # empty mass + fuel mass + payload (data taken from Wikipedia Saturn V)
 m_final = 137*10**3 + 141*10**3           #final mass
-#m0 = 149912*.4536
-#m_final = m0/15
 ve = 3*10**3                             # velocity of expelled gas
 dmdt = 12.5*10**3                         # speed of mass loss (kg/s)
 #Cd = 0
@@ -82,5 +134,18 @@ plt.plot(h, g)
 plt.title('Gravity acceleration')
 plt.xlabel('height h (km)')
 plt.ylabel('g in (m/s)')
+'''
+
+g0 = 9.81
+m_payload = 141136
+mS_array = [137000, 40100, 15200]
+mF_array = [2077000, 456100, 107800]
+
+Isp_array = [263, 421, 421]
+dmdt_array = [34500*10**3/(g0*Isp_array[0]), 5141*10**3/(g0*Isp_array[1]), 1033*10**3/(g0*Isp_array[2])]
+Cd = 0.75
+R = 5
+
+plot_rocket_trajectory(mS_array, mF_array, m_payload, Isp_array, dmdt_array, Cd, R)
 
 plt.show()
