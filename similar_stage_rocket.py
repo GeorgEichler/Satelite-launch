@@ -22,7 +22,7 @@ for n in stages:
     v_stages = np.append(v_stages, v_end)
 
 v_max = I_sp*g0*(1-epsilon)*np.log(1/r)
-#Notice the quotient of v_end/v_max is independent of g0 and I_sp
+#Notice the quotient of v_end/v_max is independent of g0 and I_sp but equal I_sp is still assumed
 plt.scatter(stages, v_stages/v_max, label = f'$\epsilon = $ {epsilon}, r = {r}')
 plt.xlabel('Number of stages')
 plt.ylabel('Final velocity to maximal velocity')
