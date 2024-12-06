@@ -22,9 +22,34 @@ for n in stages:
     v_stages = np.append(v_stages, v_end)
 
 v_max = I_sp*g0*(1-epsilon)*np.log(1/r)
-plt.scatter(stages, v_stages/v_max, label = f'I_sp = {I_sp}, $\epsilon = $ {epsilon}, r = {r}')
+#Notice the quotient of v_end/v_max is independent of g0 and I_sp
+plt.scatter(stages, v_stages/v_max, label = f'$\epsilon = $ {epsilon}, r = {r}')
 plt.xlabel('Number of stages')
 plt.ylabel('Final velocity to maximal velocity')
 plt.title('Final velocity for stage similar rocket per stage')
 plt.legend()
+
+
+#Calculating necessary payload/total mass ratio for target velocity
+v_target = 10*10**3 #target velocity (m/s)
+r_array = []
+
+for n in stages:
+    r = ((np.exp(-v_target / (I_sp*g0*n) ) - epsilon) / (1 - epsilon))**n
+    r_array.append(r)
+
+print(f"{'Stages':<10}{'r_array':<10}")
+print("-" * 20)
+
+# Rows
+for stage, r in zip(stages, r_array):
+    print(f"{stage:<10}{r:<10.3f}")
+
+plt.figure()
+plt.scatter(stages, r_array, label = fr'$I_{{sp}}$ = {I_sp}, $\epsilon =$ {epsilon}, $v_{{target}}$ = {v_target/1000} km/s')
+plt.xlabel('Number of stages')
+plt.ylabel('Payload/total mass ratio')
+plt.title('r ratio needed for n stages')
+plt.legend()
+
 plt.show()
