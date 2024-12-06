@@ -82,7 +82,7 @@ def plot_rocket_trajectory(mS_array, mF_array, m_payload, Isp_array, dmdt_array,
     plt.legend()
 
 
-'''
+
 m0 = 137*10**3 + 2169*10**3 + 141*10**3   # empty mass + fuel mass + payload (data taken from Wikipedia Saturn V)
 m_final = 137*10**3 + 141*10**3           #final mass
 ve = 3*10**3                             # velocity of expelled gas
@@ -134,7 +134,8 @@ plt.plot(h, g)
 plt.title('Gravity acceleration')
 plt.xlabel('height h (km)')
 plt.ylabel('g in (m/s)')
-'''
+
+
 
 g0 = 9.81
 m_payload = 141136
@@ -146,6 +147,6 @@ dmdt_array = [34500*10**3/(g0*Isp_array[0]), 5141*10**3/(g0*Isp_array[1]), 1033*
 Cd = 0.75
 R = 5
 
-plot_rocket_trajectory(mS_array, mF_array, m_payload, Isp_array, dmdt_array, Cd, R)
+#plot_rocket_trajectory(mS_array, mF_array, m_payload, Isp_array, dmdt_array, Cd, R)
 
 plt.show()
