@@ -31,7 +31,7 @@ def Lagrange_mass_optimisation(v_end, I_sp, epsilon, m_payload):
     else:
         raise ValueError("Root finding does not converge")
     
-    n = (1 + mu*c) / (epsilon*mu*c)
+    n = (mu*c - 1) / (epsilon*mu*c)
 
     #get number of stage
     s = len(I_sp)
@@ -57,3 +57,4 @@ epsilon = [0.1, 0.15, 0.2]
 m_payload = 5000
 
 m0, m, m_empty, m_fuel = Lagrange_mass_optimisation(v_end, I_sp, epsilon, m_payload)
+print(m)
