@@ -54,10 +54,10 @@ def Lagrange_mass_optimisation(v_end, I_sp, epsilon):
     return m0, m, m_empty, m_fuel
 
 v_end = 10
-I_sp = [400, 350, 300]
-epsilon = [0.1, 0.15, 0.2]
+I_sp = [250, 250, 350]
+epsilon = [0.1, 0.1, 0.1]
 m_payload = 5000
 
 #for given payload mass the total mass is given by multiplying by m_payload
-m0, m, m_empty, m_fuel = Lagrange_mass_optimisation(v_end, I_sp, epsilon, m_payload)
+m0, m, m_empty, m_fuel = Lagrange_mass_optimisation(v_end, I_sp, epsilon)
 print(m)
