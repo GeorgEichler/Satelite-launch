@@ -14,15 +14,17 @@ def constraint_equation(x, v, I_sp, epsilon):
     else:
         return np.sum(c * np.log( (x*c - 1) / (epsilon*x*c) )) - v
 
-def Lagrange_mass_optimisation(v_end, I_sp, epsilon, m_payload):
+def Lagrange_mass_optimisation(v_end, I_sp, epsilon):
     #Ensure arrays are numpy arrays
     I_sp = np.array(I_sp)
     epsilon = np.array(epsilon)
     g0 = 9.81
     c = g0*I_sp/1000 #has units km/s
+    #set payload mass to unity
+    m_payload = 1
     #safe mass of payload
     m0 = m_payload
-    #x0 = 0.1
+    
     
     #Solve the constraint equation
     result = root_scalar(constraint_equation, args = (v_end, I_sp, epsilon), method = 'brentq', bracket = [0.1,1e3])
@@ -56,5 +58,6 @@ I_sp = [400, 350, 300]
 epsilon = [0.1, 0.15, 0.2]
 m_payload = 5000
 
+#for given payload mass the total mass is given by multiplying by m_payload
 m0, m, m_empty, m_fuel = Lagrange_mass_optimisation(v_end, I_sp, epsilon, m_payload)
 print(m)
