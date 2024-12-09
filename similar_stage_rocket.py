@@ -24,6 +24,7 @@ for n in stages:
 v_max = I_sp*g0*(1-epsilon)*np.log(1/r)
 #Notice the quotient of v_end/v_max is independent of g0 and I_sp but equal I_sp is still assumed
 plt.scatter(stages, v_stages/v_max, label = f'$\epsilon = $ {epsilon}, r = {r}')
+plt.plot(stages, v_stages/v_max)
 plt.xlabel('Number of stages')
 plt.ylabel('Final velocity to maximal velocity')
 plt.title('Final velocity for stage similar rocket per stage')
@@ -45,8 +46,19 @@ print("-" * 20)
 for stage, r in zip(stages, r_array):
     print(f"{stage:<10}{r:<10.3f}")
 
+#Convert arrays to numpy arrays
+stages = np.array(stages)
+r_array = np.array(r_array)
+
+#Extract negative values of indices (those are not realisable)
+r_array = np.where(r_array < 0, np.nan, r_array)
+#get list of non-realisable indices
+nan_indices = np.isnan(r_array)
+
 plt.figure()
 plt.scatter(stages, r_array, label = fr'$I_{{sp}}$ = {I_sp}, $\epsilon =$ {epsilon}, $v_{{target}}$ = {v_target/1000} km/s')
+plt.scatter(stages[nan_indices], np.zeros_like(stages[nan_indices]), color='red', label='Undefined', zorder=5)
+plt.plot(stages, r_array)
 plt.xlabel('Number of stages')
 plt.ylabel('Payload/total mass ratio')
 plt.title('r ratio needed for n stages')
