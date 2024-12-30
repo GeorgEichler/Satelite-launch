@@ -50,18 +50,66 @@ for r in r_array:
     
     
     for k in range(len(epsilon_array)):
-        plt.scatter(stages, v_differences[k], label = f'$\epsilon = $ {epsilon_array[k]}, $\lambda$ = {r}')
+        plt.scatter(stages[1:-1], v_differences[k][1:-1], label = f'$\epsilon = $ {epsilon_array[k]}, $\lambda$ = {r}')
         #plt.plot(stages, v_differences[k])
     
     plt.xlabel('Number of stages')
     plt.ylabel('Velocity gain to the last stage')
+    #plt.ylim([0,0.3])
     plt.legend()
     plt.figure()
 
 
+
+
 #Calculating necessary payload/total mass ratio for target velocity
-v_target = 10*10**3 #target velocity (m/s)
-r_array = []
+v_target = 9*10**3 #target velocity (m/s)
+I_sp_array = [350]   # in s
+
+stages = np.array(stages)
+
+for I_sp in I_sp_array:
+    lambda_differences = np.zeros((len(epsilon_array), num_stages))
+    i = 0
+    for epsilon in epsilon_array:
+        lambda_array = np.array([])
+
+        for n in stages:
+            lambda_end = ((np.exp(-v_target / (I_sp*g0*n) ) - epsilon) / (1 - epsilon))**n
+            lambda_array = np.append(lambda_array, lambda_end)
+
+        lambda_array = np.where(lambda_array < 0, np.nan, lambda_array)
+
+        #Calculate payload ratio gain per stage
+        lambda_differences[i] = np.insert(np.diff(lambda_array), 0, lambda_array[0])
+
+        i = i+1
+
+        plt.scatter(stages, lambda_array, label = fr'$I_{{sp}}$ = {I_sp}, $\epsilon =$ {epsilon}, $v_{{target}}$ = {v_target/1000} km/s')
+        plt.plot(stages, lambda_array)
+
+    plt.xlabel('Number of stages')
+    plt.ylabel('Payload/total mass ratio')
+    plt.title('$lambda$ ratio needed for n stages')
+    plt.legend()
+    plt.figure()
+
+    for k in range(len(epsilon_array)):
+        plt.scatter(stages[1:-1], lambda_differences[k][1:-1],
+                    label = fr'$I_{{sp}}$ = {I_sp}, $\epsilon =$ {epsilon_array[k]}, $v_{{target}}$ = {v_target/1000} km/s')
+        plt.plot(stages[1:-1], lambda_differences[k][1:-1])
+    
+    plt.xlabel('Number of stages')
+    plt.ylabel('Payload ratio gain to the last stage')
+    plt.xlim(0, num_stages)
+    #plt.ylim([0,0.3])
+    plt.legend()
+    plt.figure()
+
+#closes all unused figures
+plt.close()
+plt.show()
+exit()
 
 for n in stages:
     r = ((np.exp(-v_target / (I_sp*g0*n) ) - epsilon) / (1 - epsilon))**n
