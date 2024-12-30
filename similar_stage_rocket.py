@@ -58,22 +58,6 @@ for r in r_array:
     plt.legend()
     plt.figure()
 
-'''
-v_stages = np.array([])
-
-for n in stages:
-    v_end = I_sp*g0*n*np.log(1/(r**(1/n) * (1 - epsilon) + epsilon))
-    v_stages = np.append(v_stages, v_end)
-
-v_max = I_sp*g0*(1-epsilon)*np.log(1/r)
-#Notice the quotient of v_end/v_max is independent of g0 and I_sp but equal I_sp is still assumed
-plt.scatter(stages, v_stages/v_max, label = f'$\epsilon = $ {epsilon}, r = {r}')
-plt.plot(stages, v_stages/v_max)
-plt.xlabel('Number of stages')
-plt.ylabel('Final velocity to maximal velocity')
-plt.title('Final velocity for stage similar rocket')
-plt.legend()
-'''
 
 #Calculating necessary payload/total mass ratio for target velocity
 v_target = 10*10**3 #target velocity (m/s)
