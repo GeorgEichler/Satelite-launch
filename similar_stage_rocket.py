@@ -7,13 +7,22 @@ and n = m_0/(m_S + m_F) for each stage which follows directly from the first two
 Moreover they all have the same specific impulse I_sp
 '''
 
+
+# Set font sizes for plots
+font_size_labels = 15
+font_size_ticks = 15
+font_size_legend = 15
+
+#Change figuresize for plots globally
+plt.rcParams['figure.figsize'] = [8, 6]
+
 g0 = 9.81    # in m/s
 I_sp = 300   # in s
 
 r_array = [0.01, 0.05]     # ratio of payload/total mass
 epsilon_array = [0.05, 0.1, 0.15]
 
-num_stages = 10
+num_stages = 8
 stages = range(1, num_stages+1)
 
 
@@ -42,21 +51,25 @@ for r in r_array:
         plt.scatter(stages, v_stages/v_max, label = f'$\epsilon = $ {epsilon}, $\lambda$ = {r}')
         plt.plot(stages, v_stages/v_max)
 
-    plt.xlabel('Number of stages')
-    plt.ylabel('Final velocity to maximal velocity')
-    plt.title('Final velocity for stage similar rocket')
-    plt.legend()
+    plt.xlabel('Number of stages', fontsize = font_size_labels)
+    plt.xticks(fontsize = font_size_ticks)
+    plt.ylabel('Final velocity/maximal velocity', fontsize = font_size_labels)
+    plt.yticks(fontsize = font_size_ticks)
+    #plt.title('Final velocity for stage similar rocket')
+    plt.legend(fontsize = font_size_legend)
     plt.figure()
     
     
     for k in range(len(epsilon_array)):
-        plt.scatter(stages[1:-1], v_differences[k][1:-1], label = f'$\epsilon = $ {epsilon_array[k]}, $\lambda$ = {r}')
+        plt.scatter(stages[1:], v_differences[k][1:], label = f'$\epsilon = $ {epsilon_array[k]}, $\lambda$ = {r}')
         #plt.plot(stages, v_differences[k])
     
-    plt.xlabel('Number of stages')
-    plt.ylabel('Velocity gain to the last stage')
+    plt.xlabel('Number of stages', fontsize = font_size_labels)
+    plt.xticks(fontsize = font_size_ticks)
+    plt.ylabel('Velocity ratio gain compared to previous stage', fontsize = font_size_labels)
+    plt.yticks(fontsize = font_size_ticks)
     #plt.ylim([0,0.3])
-    plt.legend()
+    plt.legend(fontsize = font_size_legend)
     plt.figure()
 
 
@@ -64,7 +77,7 @@ for r in r_array:
 
 #Calculating necessary payload/total mass ratio for target velocity
 v_target = 9*10**3 #target velocity (m/s)
-I_sp_array = [350]   # in s
+I_sp_array = [300]   # in s
 
 stages = np.array(stages)
 
@@ -85,25 +98,29 @@ for I_sp in I_sp_array:
 
         i = i+1
 
-        plt.scatter(stages, lambda_array, label = fr'$I_{{sp}}$ = {I_sp}, $\epsilon =$ {epsilon}, $v_{{target}}$ = {v_target/1000} km/s')
+        plt.scatter(stages, lambda_array, label = fr'$I_{{sp}}$ = {I_sp}, $\epsilon =$ {epsilon}')
         plt.plot(stages, lambda_array)
 
-    plt.xlabel('Number of stages')
-    plt.ylabel('Payload/total mass ratio')
-    plt.title('$lambda$ ratio needed for n stages')
-    plt.legend()
+    plt.xlabel('Number of stages', fontsize = font_size_labels)
+    plt.xticks(fontsize = font_size_ticks)
+    plt.ylabel('Payload to total mass ratio $\lambda$', fontsize = font_size_labels)
+    plt.yticks(fontsize = font_size_ticks)
+    #plt.title('$\lambda$ ratio needed for n stages')
+    plt.legend(fontsize = font_size_legend)
     plt.figure()
 
     for k in range(len(epsilon_array)):
-        plt.scatter(stages[1:-1], lambda_differences[k][1:-1],
-                    label = fr'$I_{{sp}}$ = {I_sp}, $\epsilon =$ {epsilon_array[k]}, $v_{{target}}$ = {v_target/1000} km/s')
-        plt.plot(stages[1:-1], lambda_differences[k][1:-1])
+        plt.scatter(stages[1:], lambda_differences[k][1:],
+                    label = fr'$I_{{sp}}$ = {I_sp}, $\epsilon =$ {epsilon_array[k]}')
+        plt.plot(stages[1:], lambda_differences[k][1:])
     
-    plt.xlabel('Number of stages')
-    plt.ylabel('Payload ratio gain to the last stage')
-    plt.xlim(0, num_stages)
+    plt.xlabel('Number of stages', fontsize = font_size_labels)
+    plt.xticks(fontsize = font_size_ticks)
+    plt.ylabel('$\lambda$ gain compared to previous stage', fontsize = font_size_labels)
+    plt.yticks(fontsize = font_size_ticks)
+    #plt.xlim(0, num_stages)
     #plt.ylim([0,0.3])
-    plt.legend()
+    plt.legend(fontsize = font_size_legend)
     plt.figure()
 
 #closes all unused figures
