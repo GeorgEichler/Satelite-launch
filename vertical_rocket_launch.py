@@ -16,7 +16,7 @@ def vertical_rocket_model(t, y, m0, ve, dmdt, Cd, R):
     G = 6.674*10**(-11) #gravitational constant
     Re = 6.378*10**6    #radius of the earth
     M = 5.972*10**24    # mass of the earth
-    rho0 = 1.2    #air density on sea level
+    rho0 = 1.2          #air density on sea level
     H = 8.333*10**3     #height scale
     A = np.pi*R**2      #cross-sectional area of the rocket
 
@@ -27,7 +27,6 @@ def vertical_rocket_model(t, y, m0, ve, dmdt, Cd, R):
 
     return [dzdt, dvdt]
 
-# Initial conditions
 
 def plot_rocket_trajectory(mS_array, mF_array, m_payload, Isp_array, dmdt_array, Cd, R):
     #Input variables:
