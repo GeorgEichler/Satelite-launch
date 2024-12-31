@@ -56,7 +56,7 @@ def Lagrange_mass_optimisation(v_end, I_sp, epsilon):
 
     return m0, m, m_empty, m_fuel
 
-v_end = 10
+v_end = 9
 I_sp = [300, 300, 300]
 epsilon = [0.1, 0.1, 0.1]
 
@@ -69,7 +69,7 @@ fontsize_label = 14
 fontsize_legend = 14
 fontsize_ticks = 14
 
-epsilon_array = np.linspace(0.05, 0.15, 11)
+epsilon_array = np.linspace(0.05, 0.15, 101)
 I_sp_array = [300]
 
 #number of stages
@@ -91,7 +91,13 @@ for x in I_sp_array:
 
     #Plot the normalised values
     for k in range(s):
-        plt.plot(epsilon_array, m_normalised[k, :])
-    print(m_normalised)
+        plt.plot(epsilon_array, m_normalised[k, :], label = fr'Stage {k+1}')
 
+    plt.xlabel(fr'Structural ratio $\epsilon$', fontsize = fontsize_label)
+    plt.xticks(fontsize = fontsize_ticks)
+    plt.ylabel(fr'Stage mass normalised to $m_0$', fontsize = fontsize_label)
+    plt.yticks(fontsize = fontsize_ticks)
+    plt.legend(fontsize = fontsize_legend)
+
+plt.close()
 plt.show()
