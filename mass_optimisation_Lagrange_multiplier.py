@@ -62,7 +62,7 @@ epsilon = [0.1, 0.1, 0.1]
 
 #for given payload mass the total mass is given by multiplying by m_payload
 m0, m, m_empty, m_fuel = Lagrange_mass_optimisation(v_end, I_sp, epsilon)
-print(1/m0*m)
+print(m0)
 
 #setting fontsize
 fontsize_label = 14
@@ -70,18 +70,26 @@ fontsize_legend = 14
 fontsize_ticks = 14
 
 epsilon_array = np.linspace(0.05, 0.15, 101)
-I_sp_array = [300]
+I_sp_array1 = [[250,250],[300,300],[350,350]]
+I_sp_array2 = [[250,250,250],[300,300,300],[350,350,350]]
+
+I_sp_array1 = [[300,350]]
+I_sp_array2 = [[300,350,350]]
 
 #number of stages
-s = 3
+s = 2
 
-for x in I_sp_array:
-    I_sp = x*np.ones(s)
+m02 = []
+
+for Isp in I_sp_array1:
+    I_sp = np.array(Isp)
     m_normalised = np.zeros((s, len(epsilon_array)))
 
     for j, eps in enumerate(epsilon_array):
         epsilon = eps*np.ones(s)
         m0, m, m_empty, m_fuel = Lagrange_mass_optimisation(v_end, I_sp, epsilon)
+
+        m02.append(m0)
 
         #normalise m
         m = 1/m0*m 
@@ -95,9 +103,61 @@ for x in I_sp_array:
 
     plt.xlabel(fr'Structural ratio $\epsilon$', fontsize = fontsize_label)
     plt.xticks(fontsize = fontsize_ticks)
-    plt.ylabel(fr'Stage mass normalised to $m_0$', fontsize = fontsize_label)
+    plt.ylabel(fr'Stage masses normalised to $m_0$', fontsize = fontsize_label)
     plt.yticks(fontsize = fontsize_ticks)
     plt.legend(fontsize = fontsize_legend)
+    #plt.title(f'Isp = {Isp}')
+    plt.figure()
 
-plt.close()
+#number of stages
+s = 3
+m03 = []
+
+for Isp in I_sp_array2:
+    I_sp = np.array(Isp)
+    m_normalised = np.zeros((s, len(epsilon_array)))
+
+    for j, eps in enumerate(epsilon_array):
+        epsilon = eps*np.ones(s)
+        m0, m, m_empty, m_fuel = Lagrange_mass_optimisation(v_end, I_sp, epsilon)
+
+        m03.append(m0)
+
+        #normalise m
+        m = 1/m0*m 
+
+        #Store values
+        m_normalised[:,j] = m
+
+    #Plot the normalised values
+    for k in range(s):
+        plt.plot(epsilon_array, m_normalised[k, :], label = fr'Stage {k+1}')
+
+    plt.xlabel(fr'Structural ratio $\epsilon$', fontsize = fontsize_label)
+    plt.xticks(fontsize = fontsize_ticks)
+    plt.ylabel(fr'Stage masses normalised to $m_0$', fontsize = fontsize_label)
+    plt.yticks(fontsize = fontsize_ticks)
+    plt.legend(fontsize = fontsize_legend)
+    #plt.title(f'Isp = {Isp}')
+    plt.figure()
+
+#Transform to numpy arrays to allow vector operations
+m02 = np.array(m02)
+m03 = np.array(m03)
+
+mass_ratio = m03[:101]/m02[:101]
+
+plt.plot(epsilon_array, mass_ratio)
+plt.xlabel(fr'Structural ratio $\epsilon$', fontsize = fontsize_label)
+plt.xticks(fontsize = fontsize_ticks)
+plt.ylabel(fr'Mass ratio $m_0^{{(3)}}/m_0^{{(2)}}$', fontsize = fontsize_label)
+plt.yticks(fontsize = fontsize_ticks)
+#print(m02[:101])
+#print(m03[:101])
+
+print(fr'Stage 2: mass for $\epsilon = 0.05$ is {m02[0]} and $\epsilon = 0.15$ is {m02[100]}')
+print(f'Ratio for stage 2 of these masses is {m02[100]/m02[0]}')
+print(fr'Stage 3: mass for $\epsilon = 0.05$ is {m03[0]} and $\epsilon = 0.15$ is {m03[100]}')
+print(f'Ratio for stage 3 of these masses is {m03[100]/m03[0]}')
+
 plt.show()
