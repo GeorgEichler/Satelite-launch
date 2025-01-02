@@ -77,7 +77,7 @@ for r in r_array:
 
 #Calculating necessary payload/total mass ratio for target velocity
 v_target = 9*10**3 #target velocity (m/s)
-I_sp_array = [300]   # in s
+I_sp_array = [300]   # specific impulse in s
 
 stages = np.array(stages)
 
